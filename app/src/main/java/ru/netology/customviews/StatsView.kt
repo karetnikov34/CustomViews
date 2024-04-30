@@ -21,7 +21,6 @@ class StatsView @JvmOverloads constructor(
     private var radius = 0F
     private var center = PointF(0F, 0F)
     private var oval = RectF(0F, 0F, 0F, 0F)
-    private val total = 2000F
 
     private var lineWidth = AndroidUtils.dp(context, 5F).toFloat()
     private var fontSize = AndroidUtils.dp(context, 40F).toFloat()
@@ -69,6 +68,7 @@ class StatsView @JvmOverloads constructor(
         }
 
         var startFrom = -90F
+        val total = data.sum() * 2
         for ((index, datum) in data.withIndex()) {
             val angle = 360F * datum / total
             paint.color = colors.getOrNull(index) ?: randomColor()
