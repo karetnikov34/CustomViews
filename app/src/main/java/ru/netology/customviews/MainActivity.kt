@@ -8,11 +8,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         findViewById<StatsView>(R.id.stats).data = listOf(
-            1000F,
-            250F,
-            250F,
             500F,
-            750F
+            200F,
+            200F
         )
     }
 }

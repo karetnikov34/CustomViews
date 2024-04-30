@@ -7,6 +7,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
 import kotlin.math.min
 import kotlin.random.Random
@@ -20,6 +21,7 @@ class StatsView @JvmOverloads constructor(
     private var radius = 0F
     private var center = PointF(0F, 0F)
     private var oval = RectF(0F, 0F, 0F, 0F)
+    private val total = 2000F
 
     private var lineWidth = AndroidUtils.dp(context, 5F).toFloat()
     private var fontSize = AndroidUtils.dp(context, 40F).toFloat()
@@ -68,18 +70,21 @@ class StatsView @JvmOverloads constructor(
 
         var startFrom = -90F
         for ((index, datum) in data.withIndex()) {
-            val angle = 360F * datum / data.sum()
+            val angle = 360F * datum / total
             paint.color = colors.getOrNull(index) ?: randomColor()
             canvas.drawArc(oval, startFrom, angle, false, paint)
             startFrom += angle
             if (index == data.lastIndex) {
+                val emptyAngle = 360F * (total - data.sum()) / total
+                paint.color = ContextCompat.getColor(context, R.color.divider_color)
+                canvas.drawArc(oval, startFrom, emptyAngle, false, paint)
                 paint.color = colors.first()
-                canvas.drawArc(oval, -90F, angle, false, paint)
+                canvas.drawArc(oval, -90F, 1F, false, paint)
             }
         }
 
         canvas.drawText(
-            "%.2f%%".format(100F),
+            "%.2f%%".format(data.sum() * 100 / total),
             center.x,
             center.y + textPaint.textSize / 4,
             textPaint,
