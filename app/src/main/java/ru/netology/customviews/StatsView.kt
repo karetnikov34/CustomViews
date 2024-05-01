@@ -23,15 +23,19 @@ class StatsView @JvmOverloads constructor(
     private var oval = RectF(0F, 0F, 0F, 0F)
 
     private var lineWidth = AndroidUtils.dp(context, 5F).toFloat()
-    private var fontSize = AndroidUtils.dp(context, 40F).toFloat()
     private var colors = emptyList<Int>()
+    private var textSize = AndroidUtils.dp(context, 40F).toFloat()
 
     init {
         context.withStyledAttributes(attrs, R.styleable.StatsView) {
             lineWidth = getDimension(R.styleable.StatsView_lineWidth, lineWidth)
-            fontSize = getDimension(R.styleable.StatsView_fontSize, fontSize)
-            val resId = getResourceId(R.styleable.StatsView_colors, 0)
-            colors = resources.getIntArray(resId).toList()
+            textSize = getDimension(R.styleable.StatsView_textSize, textSize)
+            colors = listOf(
+                getColor(R.styleable.StatsView_color1, randomColor()),
+                getColor(R.styleable.StatsView_color2, randomColor()),
+                getColor(R.styleable.StatsView_color3, randomColor()),
+                getColor(R.styleable.StatsView_color4, randomColor())
+            )
         }
     }
 
@@ -44,7 +48,7 @@ class StatsView @JvmOverloads constructor(
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
-        textSize = fontSize
+        textSize = this@StatsView.textSize
     }
 
     var data: List<Float> = emptyList()
@@ -69,9 +73,9 @@ class StatsView @JvmOverloads constructor(
 
         var startFrom = -90F
         val total = data.sum() * 2
-        for ((index, datum) in data.withIndex()) {
+        data.forEachIndexed { index, datum ->
             val angle = 360F * datum / total
-            paint.color = colors.getOrNull(index) ?: randomColor()
+            paint.color = colors.getOrElse(index) {randomColor()}
             canvas.drawArc(oval, startFrom, angle, false, paint)
             startFrom += angle
             if (index == data.lastIndex) {
