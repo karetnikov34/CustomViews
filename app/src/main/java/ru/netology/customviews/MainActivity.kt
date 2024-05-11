@@ -7,13 +7,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val view = findViewById<StatsView>(R.id.stats)
         findViewById<StatsView>(R.id.stats).data = listOf(
-            500F,
-            200F,
-            200F,
-            700F,
-            300F,
-            300F
+            0.25F,
+            0.25F,
+            0.25F,
+            0.25F
         )
     }
 }
